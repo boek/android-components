@@ -7,6 +7,7 @@ package mozilla.components.browser.search
 import android.graphics.Bitmap
 import android.net.Uri
 import android.text.TextUtils
+import kotlinx.coroutines.experimental.async
 import java.util.Locale
 
 /**
@@ -17,7 +18,7 @@ class SearchEngine internal constructor(
     val name: String,
     val icon: Bitmap,
     private val resultsUris: List<Uri>,
-    private val suggestUri: Uri? = null
+    internal val suggestUri: Uri? = null
 ) {
     init {
         if (resultsUris.isEmpty()) {
@@ -36,6 +37,10 @@ class SearchEngine internal constructor(
         val urlWithSubstitutions = paramSubstitution(template, Uri.encode(searchTerm))
         return normalize(urlWithSubstitutions) // User-entered search engines may need normalization.
     }
+
+    /**
+     * Returns a list of search suggestions returned by the suggestUri
+     */
 
     /**
      * Formats template string with proper parameters. Modeled after ParamSubstitution in nsSearchService.js
